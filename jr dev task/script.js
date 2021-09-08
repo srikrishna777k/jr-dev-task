@@ -80,17 +80,26 @@ let expectdData = [{
 
 const actualData = [];
 
-inputData.metadata.forEach(({label,id,type})=>{
- inputData.dimensions.forEach((dimension)=>{
-  if (dimension.id == id){
-   dimension.values.forEach((val,i)=>{
-    if (!actualData[i])
-     actualData.push({[label]:val})
-    else
-     actualData[i][label] = val
-   })
-  }
- })
+const labelData = {}
+
+// Fetching individual label data
+inputData.metadata.forEach(({id,label})=>{
+  let ids = inputData.dimensions.find(val=>id==val.id)
+  labelData[label] = ids.values
 })
 
+// Pushing actual data 
+for (let data in labelData){
+  labelData[data].forEach((val,i)=>{
+    if (!actualData[i])
+      actualData.push({[data]:val})
+    else
+      actualData[i][data] = val
+  })
+}
+
+// output
 console.log(actualData)
+
+// Time complexity O(n^2)
+// Space complexity O(n^2)
